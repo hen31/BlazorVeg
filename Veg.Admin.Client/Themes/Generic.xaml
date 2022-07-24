@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Veg.Admin.Client.Controls" 
+                    xmlns:local="clr-namespace:Veg.Admin.Client.Themes">
+    <Style TargetType="Image" x:Key="ImageStyle">
+
+    </Style>
+    <Style TargetType="controls:HendrikImage" BasedOn="{StaticResource ImageStyle}">
+        <Style.Setters>
+            <Setter Property="Margin" Value="3"/>
+        </Style.Setters>
+    </Style>
+</ResourceDictionary>

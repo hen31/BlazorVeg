@@ -1,0 +1,114 @@
+﻿@inherits AddProductBase
+
+<div>
+    <Field>
+        <FieldLabel>Productnaam</FieldLabel>
+        <TextEdit @bind-Text="@ProductName" Placeholder="Naam van product" required />
+    </Field>
+    <Field>
+        <FieldLabel>Merk</FieldLabel>
+        <Autocomplete Data="@BrandCompleteItems"
+                      TextField="@((item)=>item.Text)"
+                      ValueField="@((item)=>item.Text)"
+                      SelectedValue="@BrandName"
+                      SelectedValueChanged="@((object newValue)=> ValueOfBrandNameChanged(newValue))"
+                      SearchChanged="BrandSearchChanged"
+                      Filter="AutocompleteFilter.Contains"
+                      Placeholder="Merk van product" required />
+    </Field>
+    <Field>
+        <FieldLabel>Categorie</FieldLabel>
+        <Autocomplete TItem="Veg.Entities.ProductCategory"
+                      SelectedValue="@SelectedCategory"
+                      SelectedValueChanged="SelectedCategoryChanged"
+                      Data="@CategoriesSelect"
+                      ValueField="((b)=> b)"
+                      TextField="((b)=> b.FullCategoryPath)"
+                      Placeholder="Categorie van product"
+                      Filter="AutocompleteFilter.Contains" required />
+    </Field>
+    <Field>
+        <FieldLabel>Vega of vegan</FieldLabel>
+        <RadioGroup TValue="string" Name="vegaorvegan" @bind-CheckedValue="@VeganOrVega">
+            <Radio TValue="string" Value="@("Vega")">Vega</Radio>
+            <Radio TValue="string" Value="@("Vegan")">Vegan</Radio>
+        </RadioGroup>
+    </Field>
+    <Field>
+        <FieldLabel>Tags</FieldLabel>
+        <Row>
+            @foreach (var tag in Tags)
+            {
+                <Badge Color="Color.Primary" Margin="Margin.Is2">
+                    @tag
+                    <button @onclick="@(() => { Tags.Remove(tag);})" class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </Badge>
+            }
+        </Row>
+    </Field>
+    <div class="input-group">
+        <TextEdit @bind-Text="@TagName" MaxLength="15" Placeholder="Tag toevoegen" @onkeydown="@((KeyboardEventArgs e)=> { if (e.Key == "Enter") {AddTag();  } })" />
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" @onclick="@(() => { AddTag();  })">+</button>
+        </div>
+    </div>
+
+    @if (ProductImage != null)
+    {
+        <Card>
+            <div style="
+        width: 100%;
+        overflow: hidden;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+">
+                <Figure>
+                    <FigureImage Source="@(string.Concat("data:image/png;base64, ", ProductImage.Data))" />
+                </Figure>
+            </div>
+            <CardBody>
+                <Button Color="Color.Danger" @onclick="@(()=>ProductImage = null)">Verwijderen</Button>
+            </CardBody>
+        </Card>
+    }
+    <Field>
+        <FieldLabel>Afbeelding toevoegen(optioneel)</FieldLabel>
+        <FileEdit Filter="image/jpeg, image/png" Multiple="false" Changed="@OnImageChanged" />
+    </Field>
+
+    <Field>
+        <FieldLabel>Verkrijgbaar bij</FieldLabel>
+        @foreach (var defaultStore in AvailbleAtDefaultStores)
+        {
+            <Blazorise.Check TValue="bool" @bind-Checked="@defaultStore.IsChecked">@defaultStore.Store.Name</Blazorise.Check>
+        }
+    </Field>
+
+    @foreach (var atStore in AvailbleAtExtraStores)
+    {
+        <Field>
+            <FieldLabel>Ook verkrijgbaar bij</FieldLabel>
+            <Autocomplete Data="@StoreCompleteItems"
+                          TextField="@((item)=>item.Text)"
+                          ValueField="@((item)=>item.Text)"
+                          SelectedValue="@atStore.StoreName"
+                          SelectedValueChanged="@((object newValue)=> ValueOfStoreNameChanged(atStore, newValue))"
+                          SearchChanged="SearchChanged"
+                          Placeholder="Ook verkrijgbaar bij" Class="d-inline"
+                          Filter="AutocompleteFilter.Contains" />
+        </Field>
+
+    }
+
+    @if (!AddedSucces)
+    {
+        <Button Type="ButtonType.Button" Class="pull-right" @onclick="@(async () => await AddProductPost())">Product toevoegen</Button>
+    }
+    <Alert Color="Color.Success" Visible="@AddedSucces">
+        <AlertMessage>
+            Product is toegevoegd
+        </AlertMessage>
+    </Alert>
+</div>
+

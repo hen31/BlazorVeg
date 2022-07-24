@@ -1,0 +1,58 @@
+﻿<mah:MetroWindow x:Class="Veg.Admin.Client.ReportWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:mahIcon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:controls="clr-namespace:Veg.Admin.Client.Controls" 
+                 Title="{Binding Title}"
+                 SizeToContent="Height"
+                 WindowStartupLocation="CenterOwner"
+                 x:Name="mainView"
+                 Width="800">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Reden" Margin="2"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Report.Reason}" Margin="2"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Extra informatie" Margin="2" VerticalAlignment="Top"/>
+        <TextBox AcceptsReturn="True" Grid.Row="1" Grid.Column="1"  Text="{Binding Report.ExtraInformation}"  Margin="2"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="Toegevoegd op" Margin="2" VerticalAlignment="Top"/>
+        <mah:DateTimePicker Grid.Row="2" Grid.Column="1"  SelectedDateTime="{Binding Report.AddedAt}"  Margin="2"/>
+
+        <Separator Grid.Row="3" Grid.ColumnSpan="2"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Content="Afgehandeld" Margin="2" VerticalAlignment="Top"/>
+        <CheckBox Grid.Row="4" Grid.Column="1"  IsChecked="{Binding Report.Handled}"  Margin="2"/>
+
+        <Label Grid.Row="5" Grid.Column="0" Content="Afgehandeld door" Margin="2" VerticalAlignment="Top"/>
+        <TextBox AcceptsReturn="True" Grid.Row="5" Grid.Column="1"  Text="{Binding Report.HandledMessage}"  Margin="2"/>
+
+
+        <Label Grid.Row="6" Grid.Column="0" Content="Aangemaakt door" Margin="2"/>
+        <Button Grid.Row="6" Grid.Column="1" Content="{Binding Report.AddedByMember.UserName}" Command="{Binding GoToUserCommand}" Margin="2"/>
+
+        <Label Grid.Row="7" Grid.Column="0" Content="Gekoppeld aan" Margin="2"/>
+        <Button Grid.Row="7" Grid.Column="1" Content="Openen" Command="{Binding OpenProductCommand}" Margin="2"/>
+
+
+        <Button HorizontalAlignment="Right" Grid.Row="10" Grid.ColumnSpan="2" Margin="3" Command="{Binding SaveCommand}">Opslaan</Button>
+    </Grid>
+</mah:MetroWindow>

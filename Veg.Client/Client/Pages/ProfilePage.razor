@@ -1,0 +1,68 @@
+﻿@inherits ProfileBase
+@page "/Profile/{IdOfUser:guid}"
+
+@inject VegImageService imageService
+
+<Container>
+    <Jumbotron>
+        @if (NoUserFound)
+        {
+            <p>Gebruiker bestaat niet</p>
+        }
+        else if (Member != null)
+        {
+            <p>
+                <b>Gebruikersnaam:</b>
+                @Member.UserName
+            </p>
+            <p>
+                <b>Lid sinds:</b>
+                @Member.UserSince.ToString("dd-MM-yyyy")
+            </p>
+            if (ProfileForCurrentUser)
+            {
+                <Button @onclick=ChangePassword>Wachtwoord wijzigen</Button>
+            }
+        }
+        else
+        {
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Laden...</span>
+            </div>
+        }
+    </Jumbotron>
+
+    @if (ReviewsForUser != null && ReviewsForUser.Count > 0)
+    {
+        <Jumbotron>
+            <JumbotronSubtitle>Reviews</JumbotronSubtitle>
+            @foreach (var review in ReviewsForUser)
+            {
+                <Row Gutter="(0,16)">
+                    <Column ColumnSize="ColumnSize.Is12">
+                        @if ((ReviewsForUser.IndexOf(review) % 2) == 0)
+                        {
+                            <div class="bg-light p-2">
+                                <Veg.Client.Components.ReviewView ProductReview="@review" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="bg-info p-2">
+                                <Veg.Client.Components.ReviewView ProductReview="@review" />
+                            </div>
+                        }
+                    </Column>
+                </Row>
+            }
+            @if (ReviewsForUser.Count < TotalReviewsForUserCount && !LoadingReviews)
+            {
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is12">
+                        <Button Type="ButtonType.Button" @onclick="(async () => await LoadNextReviews())" PreventDefaultOnSubmit="true" Class="pull-right">Meer reviews laden</Button>
+                    </Column>
+                </Row>
+            }
+        </Jumbotron>
+    }
+</Container>

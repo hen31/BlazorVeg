@@ -1,0 +1,86 @@
+﻿@inherits MainLayoutBase
+@inject NavigationManager NavigationManager
+@inject Veg.App.Pages.ILoginRepository LoginRepository
+<Layout>
+    <LayoutHeader>
+        <Bar Breakpoint="Breakpoint.Desktop"
+             Background="Background.Light"
+             Visible="false"
+             ThemeContrast="ThemeContrast.Light">
+            <a href="/" style="text-decoration:none!important;">
+                <BarBrand>
+                    <span class="pl-2 pr-1" style="color:white;background-color:#145A32">Groen</span><span class="pl-1 pr-2" style="color:#145A32;background-color:white">Goed.</span>
+                </BarBrand>
+            </a>
+            <BarToggler></BarToggler>
+            <BarMenu>
+                <BarStart>
+                    <BarItem>
+                        <BarLink To="">Home</BarLink>
+                    </BarItem>
+                    @if (CurrentUser != null)
+                    {
+                        <BarItem>
+                            <BarLink To="AddProduct">Product toevoegen</BarLink>
+                        </BarItem>
+                    }
+                </BarStart>
+                <BarEnd>
+                    @if (CurrentUser == null)
+                    {
+                        <BarItem>
+                            <Button Color="Color.Primary" Clicked="@(() => NavigationManager.NavigateTo("Login"))">Inloggen</Button>
+                        </BarItem>
+                    }
+                    else
+                    {
+                        <BarItem>
+                            <Button Color="Color.Primary" Clicked="@(() => NavigationManager.NavigateTo($"Profile/{CurrentUser.MemberId.ToString("D")}"))">Profiel</Button>
+                        </BarItem>
+                        <BarItem>
+                            <Button Color="Color.Primary" Clicked="@(async () => {
+                                                                         if (await LoginRepository.Logout())
+                                                                         {
+                                                                             NavigationManager.NavigateTo(NavigationManager.Uri.ToString(), true);
+                                                                         }
+                                                                     })">
+                                Uitloggen
+                            </Button>
+                        </BarItem>
+                    }
+                </BarEnd>
+            </BarMenu>
+        </Bar>
+    </LayoutHeader>
+    <LayoutContent>
+        <Container Fluid="true">
+            @Body
+        </Container>
+    </LayoutContent>
+</Layout>
+
+<Modal @ref="SetUserNameModal">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <ModalHeader>
+            <ModalTitle>Gebruikersnaam kiezen</ModalTitle>
+            <CloseButton Clicked="@HideModal" />
+        </ModalHeader>
+        <ModalBody>
+            <p>Bedankt voor het aanmelden bij TODO. u kunt nu een gebruikersnaam kiezen.</p>
+            <Field>
+                <FieldLabel>Gebruikersnaam</FieldLabel>
+                <TextEdit @bind-Text="@UserName" Placeholder="Voer gebruikersnaam in" />
+            </Field>
+            <Alert Color="Color.Warning" Visible="@SetUserNameError">
+                <AlertMessage>
+                    @(UserNameError)
+                </AlertMessage>
+            </Alert>
+
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Primary" Clicked="@TrySavingUserName">Opslaan</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>

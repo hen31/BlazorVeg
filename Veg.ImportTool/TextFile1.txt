@@ -1,0 +1,252 @@
+﻿{
+  "kind": "customsearch#search",
+  "url": {
+    "type": "application/json",
+    "template": "https://www.googleapis.com/customsearch/v1?q={searchTerms}&num={count?}&start={startIndex?}&lr={language?}&safe={safe?}&cx={cx?}&sort={sort?}&filter={filter?}&gl={gl?}&cr={cr?}&googlehost={googleHost?}&c2coff={disableCnTwTranslation?}&hq={hq?}&hl={hl?}&siteSearch={siteSearch?}&siteSearchFilter={siteSearchFilter?}&exactTerms={exactTerms?}&excludeTerms={excludeTerms?}&linkSite={linkSite?}&orTerms={orTerms?}&relatedSite={relatedSite?}&dateRestrict={dateRestrict?}&lowRange={lowRange?}&highRange={highRange?}&searchType={searchType}&fileType={fileType?}&rights={rights?}&imgSize={imgSize?}&imgType={imgType?}&imgColorType={imgColorType?}&imgDominantColor={imgDominantColor?}&alt=json"
+  },
+  "queries": {
+    "request": [
+      {
+        "title": "Google Custom Search - beschuit",
+        "totalResults": "788",
+        "searchTerms": "beschuit",
+        "count": 10,
+        "startIndex": 1,
+        "inputEncoding": "utf8",
+        "outputEncoding": "utf8",
+        "safe": "off",
+        "cx": "413f1d13ed2f0a7c4",
+        "fileType": "jpg",
+        "searchType": "image",
+        "imgSize": "xlarge"
+      }
+    ],
+    "nextPage": [
+      {
+        "title": "Google Custom Search - beschuit",
+        "totalResults": "788",
+        "searchTerms": "beschuit",
+        "count": 10,
+        "startIndex": 11,
+        "inputEncoding": "utf8",
+        "outputEncoding": "utf8",
+        "safe": "off",
+        "cx": "413f1d13ed2f0a7c4",
+        "fileType": "jpg",
+        "searchType": "image",
+        "imgSize": "xlarge"
+      }
+    ]
+  },
+  "context": {
+    "title": "AH image search"
+  },
+  "searchInformation": {
+    "searchTime": 1.192187,
+    "formattedSearchTime": "1.19",
+    "totalResults": "788",
+    "formattedTotalResults": "788"
+  },
+  "items": [
+    {
+      "kind": "customsearch#result",
+      "title": "AH Biologisch Tarwe- & speltbeschuit bestellen | Albert Heijn",
+      "htmlTitle": "AH Biologisch Tarwe- &amp; speltbeschuit bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_434d50323537313334_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "AH Biologisch Tarwe- & speltbeschuit bestellen | Albert Heijn",
+      "htmlSnippet": "AH Biologisch Tarwe- &amp; speltbeschuit bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi395535/ah-biologisch-tarwe-en-speltbeschuit",
+        "height": 708,
+        "width": 708,
+        "byteSize": 114164,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShZ1Ay2QFyr0dceKyRxVX9LXIB8q3tuv9zT6RQn78nJFObfD1yDRTLpKIy&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "AH Beschuit naturel bestellen | Albert Heijn",
+      "htmlTitle": "AH \u003cb\u003eBeschuit\u003c/b\u003e naturel bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545239363035303238_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "AH Beschuit naturel bestellen | Albert Heijn",
+      "htmlSnippet": "AH \u003cb\u003eBeschuit\u003c/b\u003e naturel bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi1624/ah-beschuit-naturel",
+        "height": 708,
+        "width": 708,
+        "byteSize": 89003,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIEjFleHSXm6OMWsRqtAswGtgS72z5PEKQpF4_XjYYzv6RLwgBPQKJutAp&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Bolletje Beschuit vezelrijk meerzaden bestellen | Albert Heijn",
+      "htmlTitle": "Bolletje \u003cb\u003eBeschuit\u003c/b\u003e vezelrijk meerzaden bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545239363236303237_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "Bolletje Beschuit vezelrijk meerzaden bestellen | Albert Heijn",
+      "htmlSnippet": "Bolletje \u003cb\u003eBeschuit\u003c/b\u003e vezelrijk meerzaden bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi420825/bolletje-beschuit-vezelrijk-meerzaden",
+        "height": 708,
+        "width": 708,
+        "byteSize": 103454,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqM1PaFbSQlIIWMRmGvikw5e5JSAzzdEXNMLyecT0dGmPtj13r6F7vKljz&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Bolletje Volkoren beschuit bestellen | Albert Heijn",
+      "htmlTitle": "Bolletje Volkoren \u003cb\u003ebeschuit\u003c/b\u003e bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545239363431373233_2_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "Bolletje Volkoren beschuit bestellen | Albert Heijn",
+      "htmlSnippet": "Bolletje Volkoren \u003cb\u003ebeschuit\u003c/b\u003e bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi442765/bolletje-volkoren-beschuit",
+        "height": 708,
+        "width": 708,
+        "byteSize": 85946,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvXP9PqfXlB1NUVuyj16ZegOAquhuRCyWOSl9q7gGOGNUo4bbP_0hVk4EE&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Bolletje Twentsche beschuit bestellen | Albert Heijn",
+      "htmlTitle": "Bolletje Twentsche \u003cb\u003ebeschuit\u003c/b\u003e bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545237303432363033_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "Bolletje Twentsche beschuit bestellen | Albert Heijn",
+      "htmlSnippet": "Bolletje Twentsche \u003cb\u003ebeschuit\u003c/b\u003e bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi443316/bolletje-twentsche-beschuit",
+        "height": 708,
+        "width": 708,
+        "byteSize": 197784,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6GCT-fbTKoYSHAHt79wauO3HmT7BArmKFAuxA1GK-R5Z5_LreTpV5pPQp&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "AH Beschuit meergranen bestellen | Albert Heijn",
+      "htmlTitle": "AH \u003cb\u003eBeschuit\u003c/b\u003e meergranen bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545239363035343433_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "AH Beschuit meergranen bestellen | Albert Heijn",
+      "htmlSnippet": "AH \u003cb\u003eBeschuit\u003c/b\u003e meergranen bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi435720/ah-beschuit-meergranen",
+        "height": 708,
+        "width": 708,
+        "byteSize": 88187,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR420IYdqb5uoENRnXNFOYqh0Hwm2x_-NQA1cdgtOUGQdr-3_yR3xENVwZA&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Bolletje Beschuit vezelrijk meergranen bestellen | Albert Heijn",
+      "htmlTitle": "Bolletje \u003cb\u003eBeschuit\u003c/b\u003e vezelrijk meergranen bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545239363236303236_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "Bolletje Beschuit vezelrijk meergranen bestellen | Albert Heijn",
+      "htmlSnippet": "Bolletje \u003cb\u003eBeschuit\u003c/b\u003e vezelrijk meergranen bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi420826/bolletje-beschuit-vezelrijk-meergranen",
+        "height": 708,
+        "width": 708,
+        "byteSize": 106262,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgG_T-vdRtklNTtNRyCBuZ0d94qsJziba_MWgWjJAf4qKW97dj8ODu8ts&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Schär Zwieback beschuit glutenvrij bestellen | Albert Heijn",
+      "htmlTitle": "Schär Zwieback \u003cb\u003ebeschuit\u003c/b\u003e glutenvrij bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545237303535363033_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "Schär Zwieback beschuit glutenvrij bestellen | Albert Heijn",
+      "htmlSnippet": "Schär Zwieback \u003cb\u003ebeschuit\u003c/b\u003e glutenvrij bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi456007/schar-zwieback-beschuit-glutenvrij",
+        "height": 708,
+        "width": 708,
+        "byteSize": 173288,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtVoaMcD-3qNkKh7dCziNqHtfS_acLkda7sbL-VK1SaGO89vw-E_Y-GUs&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "AH Beschuit volkoren bestellen | Albert Heijn",
+      "htmlTitle": "AH \u003cb\u003eBeschuit\u003c/b\u003e volkoren bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_43545239363332393339_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "AH Beschuit volkoren bestellen | Albert Heijn",
+      "htmlSnippet": "AH \u003cb\u003eBeschuit\u003c/b\u003e volkoren bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi1625/ah-beschuit-volkoren",
+        "height": 708,
+        "width": 708,
+        "byteSize": 135546,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXuri-kFZRRRk-lSUKmi_VfPXloKxZkrazzCTbsKCJFXkvbM43REkImMwb&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    },
+    {
+      "kind": "customsearch#result",
+      "title": "Damhert Glutenvrije beschuit bestellen | Albert Heijn",
+      "htmlTitle": "Damhert Glutenvrije \u003cb\u003ebeschuit\u003c/b\u003e bestellen | Albert Heijn",
+      "link": "https://static.ah.nl/static/product/AHI_434d50303331353339_1_LowRes_JPG.JPG?options=399,q85",
+      "displayLink": "www.ah.nl",
+      "snippet": "Damhert Glutenvrije beschuit bestellen | Albert Heijn",
+      "htmlSnippet": "Damhert Glutenvrije \u003cb\u003ebeschuit\u003c/b\u003e bestellen | Albert Heijn",
+      "mime": "image/jpeg",
+      "fileFormat": "image/jpeg",
+      "image": {
+        "contextLink": "https://www.ah.nl/producten/product/wi199737/damhert-glutenvrije-beschuit",
+        "height": 708,
+        "width": 708,
+        "byteSize": 159241,
+        "thumbnailLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP7Hn8GWqyklG_ro7glPDs5cV7-V4Jh1VonwpEDtkv1410K3xC9ATSGsA&s",
+        "thumbnailHeight": 140,
+        "thumbnailWidth": 140
+      }
+    }
+  ]
+}

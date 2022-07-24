@@ -1,0 +1,162 @@
+﻿@inherits ShowProductsFilterBase
+
+@if (CurrentSearchResults != null)
+{
+    <Row Gutter="(0,16)">
+        <Blazorise.Column ColumnSize="ColumnSize.Is12">
+            <Jumbotron Style="padding: 1rem 1rem !important;">
+                <Button Clicked="@(() => FilterVisible = !FilterVisible)" Class="d-inline float-right">@(FilterVisible ? "Verbergen" : "Tonen")</Button>
+
+                <JumbotronSubtitle>Filter</JumbotronSubtitle>
+                @if (FilterVisible)
+                {
+                    <h5>Categorie</h5>
+                    <Row>
+                        @foreach (Veg.Entities.ProductCategory category in CurrentSearchResults.Categories.Where(b => LimitResultOptions.ProductCategories.Contains(b.ID)))
+                        {
+                            @if (category.ParentCategory != null)
+                            {
+                               <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+
+                                    <Check Inline="true" Checked="@(LimitResultOptions.ProductCategories.Contains(category.ID))" CheckedChanged="@(async (bool newValue) => await ProductCategoryChangedAsync(category, newValue))" TValue="bool">@(category.ParentCategory.Name + " -> " + category.Name)</Check>
+                                </Blazorise.Column>
+                            }
+                            else
+                            {
+                               <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+
+                                    <Check Inline="true" Checked="@(LimitResultOptions.ProductCategories.Contains(category.ID))" CheckedChanged="@(async (bool newValue) => await ProductCategoryChangedAsync(category, newValue))" TValue="bool">@(category.Name)</Check>
+                                </Blazorise.Column>
+                            }
+                        }
+
+                        @foreach (Veg.Entities.ProductCategory category in CurrentSearchResults.Categories.Where(b => !LimitResultOptions.ProductCategories.Contains(b.ID)).Take(5))
+                        {
+                            @if (category.ParentCategory != null)
+                            {
+                               <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+                                    <Check Inline="true" Checked="@(LimitResultOptions.ProductCategories.Contains(category.ID))" CheckedChanged="@(async (bool newValue) => await ProductCategoryChangedAsync(category, newValue))" TValue="bool">@(category.ParentCategory.Name + " -> " + category.Name)</Check>
+                                </Blazorise.Column>
+                            }
+                            else
+                            {
+                                <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+                                    <Check Inline="true" Checked="@(LimitResultOptions.ProductCategories.Contains(category.ID))" CheckedChanged="@(async (bool newValue) => await ProductCategoryChangedAsync(category, newValue))" TValue="bool">@(category.Name)</Check>
+                                </Blazorise.Column>
+                            }
+                        }
+                        @if (CurrentSearchResults.Categories.Where(b => !LimitResultOptions.ProductCategories.Contains(b.ID)).Count() > 5)
+                        {
+                            if (!MoreCategoriesVisible)
+                            {
+                                <a href="" @onclick="@(() => MoreCategoriesVisible = true)" class="m-2" @onclick:preventDefault>meer...</a>
+                            }
+                            else
+                            {
+                                @foreach (Veg.Entities.ProductCategory category in CurrentSearchResults.Categories.Where(b => !LimitResultOptions.ProductCategories.Contains(b.ID)).Skip(5))
+                                {
+                                    @if (category.ParentCategory != null)
+                                    {
+                                       <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+
+                                            <Check Inline="true" Checked="@(LimitResultOptions.ProductCategories.Contains(category.ID))" CheckedChanged="@(async (bool newValue) => await ProductCategoryChangedAsync(category, newValue))" TValue="bool">@(category.ParentCategory.Name + " -> " + category.Name)</Check>
+                                        </Blazorise.Column>
+                                    }
+                                    else
+                                    {
+                                       <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+                                            <Check Inline="true" Checked="@(LimitResultOptions.ProductCategories.Contains(category.ID))" CheckedChanged="@(async (bool newValue) => await ProductCategoryChangedAsync(category, newValue))" TValue="bool">@(category.Name)</Check>
+                                        </Blazorise.Column>
+                                    }
+                                }
+                            }
+
+                        }
+                    </Row>
+
+                    <Divider />
+                    <h5>Merk</h5>
+                    <Row>
+                        @foreach (Veg.Entities.Brand brand in CurrentSearchResults.Brands.Where(b => LimitResultOptions.Brands.Contains(b.ID)))
+                        {
+                           <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+                                <Check Inline="true" Checked="@(LimitResultOptions.Brands.Contains(brand.ID))" CheckedChanged="@(async (bool newValue) => await BrandChangedAsync(brand, newValue))" TValue="bool">@brand.Name</Check>
+                            </Blazorise.Column>
+                        }
+                        @foreach (Veg.Entities.Brand brand in CurrentSearchResults.Brands.Where(b => !LimitResultOptions.Brands.Contains(b.ID)).Take(5))
+                        {
+                           <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+                                <Check Inline="true" Checked="@(LimitResultOptions.Brands.Contains(brand.ID))" CheckedChanged="@(async (bool newValue) => await BrandChangedAsync(brand, newValue))" TValue="bool">@brand.Name</Check>
+                            </Blazorise.Column>
+                        }
+                        @if (CurrentSearchResults.Brands.Where(b => !LimitResultOptions.Brands.Contains(b.ID)).Count() > 5)
+                        {
+                            if (!MoreBrandsVisible)
+                            {
+                                <a href="" @onclick="@(() => MoreBrandsVisible = true)" @onclick:preventDefault>meer...</a>
+
+                            }
+                            else
+                            {
+                                @foreach (Veg.Entities.Brand brand in CurrentSearchResults.Brands.Where(b => !LimitResultOptions.Brands.Contains(b.ID)).Skip(5))
+                                {
+                                   <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+                                        <Check Inline="true" Checked="@(LimitResultOptions.Brands.Contains(brand.ID))" CheckedChanged="@(async (bool newValue) => await BrandChangedAsync(brand, newValue))" TValue="bool">@brand.Name</Check>
+                                    </Blazorise.Column>
+                                }
+                            }
+                        }
+                    </Row>
+                    @if (CurrentSearchResults.Tags.Count > 0)
+                    {
+                        <Divider />
+                        <h5>Tags</h5>
+                        <Row>
+                            @foreach (Veg.Entities.Tag tag in CurrentSearchResults.Tags.Where(b => LimitResultOptions.Tags.Contains(b.ID)))
+                            {
+                               <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+                                    <Check Inline="true" Checked="@(LimitResultOptions.Tags.Contains(tag.ID))" CheckedChanged="@(async (bool newValue) => await TagChangedAsync(tag, newValue))" TValue="bool">@tag.Name</Check>
+                                </Blazorise.Column>
+                            }
+                            @foreach (Veg.Entities.Tag tag in CurrentSearchResults.Tags.Where(b => !LimitResultOptions.Tags.Contains(b.ID)).Take(5))
+                            {
+                               <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+                                    <Check Inline="true" Checked="@(LimitResultOptions.Tags.Contains(tag.ID))" CheckedChanged="@(async (bool newValue) => await TagChangedAsync(tag, newValue))" TValue="bool">@tag.Name</Check>
+                                </Blazorise.Column>
+                            }
+                            @if (CurrentSearchResults.Tags.Where(b => !LimitResultOptions.Tags.Contains(b.ID)).Count() > 5)
+                            {
+                                if (!MoreTagsVisible)
+                                {
+                                    <a href="" @onclick="@(() => MoreBrandsVisible = true)" @onclick:preventDefault>meer...</a>
+
+                                }
+                                else
+                                {
+                                    @foreach (Veg.Entities.Tag tag in CurrentSearchResults.Tags.Where(b => !LimitResultOptions.Tags.Contains(b.ID)).Skip(5))
+                                    {
+                                       <Blazorise.Column ColumnSize="ColumnSize.Is4.OnWidescreen.Is6.OnTablet.Is12.OnMobile" Class="mt-2">
+
+                                            <Check Inline="true" Checked="@(LimitResultOptions.Tags.Contains(tag.ID))" CheckedChanged="@(async (bool newValue) => await TagChangedAsync(tag, newValue))" TValue="bool">@tag.Name</Check>
+                                        </Blazorise.Column>
+                                    }
+                                }
+                            }
+                        </Row>
+
+                    }
+
+                }
+            </Jumbotron>
+        </Blazorise.Column>
+    </Row>
+
+
+}

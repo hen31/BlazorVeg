@@ -1,0 +1,47 @@
+﻿@page "/confirm"
+@page "/confirm/{Email}"
+@page "/confirm/{Email}/{ConfirmCode}"
+@layout Shared.LoginLayout
+@inherits ConfirmCodeBase
+
+            <h1 class="h3 mb-3 font-weight-normal">Email bevestigen</h1>
+            @if (IsConfirming)
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Bezig met bevestigen...</span>
+                </div>
+            }
+            else if ((ConfirmResult != null && ConfirmResult.IsError))
+            {
+                <div class="alert alert-warning text-left" role="alert">
+                    @if (ConfirmResult.ErrorType == Veg.App.Pages.ConfirmEmailErrorType.ModelError)
+                    {
+                        <ul>
+                            @foreach (var error in ConfirmResult.Errors)
+                            {
+                                <li>@error.Description</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        @("Kan geen verbinding maken met server");
+                    }
+                </div>
+            }
+            <form @onsubmit="ConfirmExecuteAsync" >
+                <span>U heeft een emailadres ontvangen met een code, vul deze hier in</span>
+
+                <label for="inputEmail" class="sr-only">Emailadres</label>
+                <input type="email" id="inputEmail" class="form-control" placeholder="Emailadres" required="" autofocus="" @bind="Email" disabled=@IsConfirming />
+                <label for="inputCode" class="sr-only">Code</label>
+                <input type="text" id="inputCode" class="form-control" placeholder="Code" required="" @bind="ConfirmCode" disabled=@IsConfirming />
+
+                <div class="text-right m-2">
+                    <NavLink href="login">
+                        Inloggen
+                    </NavLink>
+                </div>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Bevestigen</button>
+            </form>

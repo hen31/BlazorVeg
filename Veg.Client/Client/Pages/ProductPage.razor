@@ -1,0 +1,239 @@
+﻿@inherits ProductPageBase
+@page "/Product/{id}"
+@page "/Product/{id}/addbarcode/{Barcode}"
+@page "/Product/frombarcode/{BarcodeForSearch}"
+
+@inject VegImageService imageService
+
+<Container>
+
+    @if (NoProductFound)
+    {
+        <Alert Color="Blazorise.Color.Danger" Visible="true">
+            <AlertMessage>
+                Helaas is dit product niet gevonden.
+                <br />
+                <Button Color="Color.Primary" @onclick="@(()=> NavigationManager.NavigateTo($"/"))">Terug</Button>
+            </AlertMessage>
+        </Alert>
+    }
+    else if (CurrentProduct != null)
+    {
+        <Veg.Client.Components.ReportModal @ref="@ReportModal" Product="@CurrentProduct" Reasons="@Reasons" />
+
+        <Row Gutter=@((0, 16))>
+            <Column ColumnSize="ColumnSize.Is12">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>
+                            @(CurrentProduct.Brand.Name + " - " + CurrentProduct.Name)
+                            <Tooltip Class="float-right" Text="Probleem met product/afbeelding rapporteren">
+                                <Button Class="btn-outline-primary" @onclick="(() => ReportItem())"><Blazorise.Icons.Material.Icon Name="Blazorise.Icons.Material.MaterialIcons.Flag"></Blazorise.Icons.Material.Icon></Button>
+                            </Tooltip>
+                        </CardTitle>
+                    </CardHeader>
+                    @if (string.IsNullOrWhiteSpace(CurrentProduct.Barcode) && CurrentUser != null)
+                    {
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is6.OnTablet.Is12.OnMobile">
+                                <Button Type="ButtonType.Button" Class="w-100" @onclick="@(async ()=> await this.ScanForBarcode())">Barcode toevoegen met camera</Button>
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is6.OnTablet.Is12.OnMobile">
+                                <Button Type="ButtonType.Button" Class="w-100" @onclick="@ShowDialogForBarcode">Barcode handmatig toevoegen</Button>
+                            </Column>
+                        </Row>
+                        <Modal @ref="BarcodeModal">
+                            <ModalBackdrop />
+                            <ModalContent IsCentered="true">
+                                <ModalHeader>
+                                    <ModalTitle>Barcode toevoegen</ModalTitle>
+                                    <CloseButton Clicked="@HideModal" />
+                                </ModalHeader>
+                                <ModalBody>
+                                    <Field>
+                                        <FieldLabel>Barcode</FieldLabel>
+                                        <TextEdit Placeholder="Barcode..." @bind-Text="@CustomBarcode" />
+                                    </Field>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button Color="Color.Primary" Clicked="@(async () => await SaveBarcodeManual())">Opslaan</Button>
+                                </ModalFooter>
+                            </ModalContent>
+                        </Modal>
+                    }
+                    else if (AddedBarcode)
+                    {
+                        <Alert Color="Color.Primary" Visible="true">
+                            <AlertMessage>
+                                Barcode toegevoegd, bedankt!
+                            </AlertMessage>
+                        </Alert>
+                    }
+                    else if (BarcodeError)
+                    {
+                        <Alert Color="Color.Danger" Visible="true">
+                            <AlertMessage>
+                                Barcode toegevoegen mislukt
+                            </AlertMessage>
+                        </Alert>
+                    }
+                    @if (string.IsNullOrWhiteSpace(CurrentProduct.ProductImage) && CurrentUser != null)
+                    {
+                        <Button Type="ButtonType.Button" Class="mt-2" @onclick="@(async ()=> await this.AddPhotoToProduct())">Afbeelding toevoegen</Button>
+                        <div class="d-none">
+                            <FileEdit Filter="image/jpeg, image/png" Multiple="false" Changed="@OnImageChanged" @ref="FileEditPhoto" />
+                        </div>
+                    }
+                    <Figure Style=" margin-left: auto; margin-right: auto;">
+                        <FigureImage Source="@imageService.GetImagePath("256", CurrentProduct.ProductImage)" Style=" margin-left: auto; margin-right: auto;" />
+                    </Figure>
+                    <CardBody>
+                        <div class="d-block d-md-none">
+                            <Field>
+                                <FieldLabel>Beoordeling</FieldLabel>
+                                <FieldBody>
+                                    @CurrentProduct.Rating.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)/5
+                                </FieldBody>
+                            </Field>
+                            <Field>
+                                <FieldLabel>Vegan/vegatarisch</FieldLabel>
+                                <FieldBody>
+                                    @(CurrentProduct.IsVegan ? "Vegan" : "Vegetarisch")
+                                </FieldBody>
+                            </Field>
+                            <Field>
+                                <FieldLabel>Merk</FieldLabel>
+                                <FieldBody>
+                                    <NavLink href="@GetSearchForBrand(CurrentProduct.Brand)">@CurrentProduct.Brand.Name</NavLink>
+                                </FieldBody>
+                            </Field>
+                            <Field>
+                                <FieldLabel>Categorie</FieldLabel>
+                                <FieldBody>
+                                    @foreach (var category in Categories)
+                                    {
+                                        <NavLink href="@GetSearchForCategory(category)">@((Categories.IndexOf(category) == Categories.Count -1) ? category.Name : ( category.Name + " > "))</NavLink>
+                                    }
+                                </FieldBody>
+                            </Field>
+                        </div>
+                        <div class="table-responsive d-none d-md-block">
+                            <Table Borderless="true" Class="table">
+                                <TableRow>
+                                    <TableRowCell Background="Background.Primary" TextColor="TextColor.Light" Style="width: 1%; white-space: nowrap;">
+                                        Beoordeling
+                                    </TableRowCell>
+                                    <TableRowCell>
+                                        @CurrentProduct.Rating.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)/5
+                                    </TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowCell Background="Background.Primary" TextColor="TextColor.Light" Style="width: 1%; white-space: nowrap;">
+                                        Vegan
+                                    </TableRowCell>
+                                    <TableRowCell>
+                                        @(CurrentProduct.IsVegan ? "Ja" : "Nee")
+                                    </TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowCell Background="Background.Primary" TextColor="TextColor.Light" Style="width: 1%; white-space: nowrap;">
+                                        Merk
+                                    </TableRowCell>
+                                    <TableRowCell>
+                                        <NavLink href="@GetSearchForBrand(CurrentProduct.Brand)">@CurrentProduct.Brand.Name</NavLink>
+                                    </TableRowCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableRowCell Background="Background.Primary" TextColor="TextColor.Light" Style="width: 1%; white-space: nowrap;">
+                                        Categorie
+                                    </TableRowCell>
+                                    <TableRowCell>
+                                        @foreach (var category in Categories)
+                                        {
+                                            <NavLink href="@GetSearchForCategory(category)">@((Categories.IndexOf(category) == Categories.Count -1) ? category.Name : ( category.Name + " > "))</NavLink>
+                                        }
+                                    </TableRowCell>
+                                </TableRow>
+                                <!--<TableRow>
+                                    <TableRowCell Background="Background.Primary" TextColor="TextColor.Light" Style="width: 1%; white-space: nowrap;">
+                                        Toegevoegd door
+                                    </TableRowCell>
+                                    <TableRowCell>
+                                        @CurrentProduct.AddedByMember.UserName
+                                    </TableRowCell>
+                                </TableRow>
+                                      <TableRow>
+                                    <TableRowCell Background="Background.Primary" TextColor="TextColor.Light" Style="width: 1%; white-space: nowrap;">
+                                        Datum
+                                    </TableRowCell>
+                                    <TableRowCell>
+                                        @CurrentProduct.DateAdded.ToLocalTime().ToString("d")
+                                    </TableRowCell>
+                                </TableRow>
+                                    -->
+
+
+                            </Table>
+                        </div>
+                        @if (CurrentProduct.Tags.Count > 0)
+                        {
+                            <Field>
+                                <FieldLabel>Tags</FieldLabel>
+                                <Row>
+                                    @foreach (var tag in CurrentProduct.Tags)
+                                    {
+                                        <Badge Color="Color.Primary" Margin="Margin.Is2">
+                                            @tag.Tag.Name
+                                        </Badge>
+                                    }
+                                </Row>
+                            </Field>
+                        }
+                        <h6>Verkrijgbaar bij:</h6>
+                        <ul class="list-group">
+                            @foreach (Veg.Entities.Store avaibleAt in CurrentProduct.StoresAvailable.Select(b => b.Store).OrderBy(b => b.Name))
+                            {
+                                <li class="list-group-item">@avaibleAt.Name</li>
+                            }
+                        </ul>
+
+                    </CardBody>
+                </Card>
+
+
+            </Column>
+        </Row>
+
+
+        <Row Gutter=@((0, 16))>
+            <Column ColumnSize="ColumnSize.Is12">
+                <Card>
+                    <CardHeader>
+                        @if (CurrentUser != null && AlreadyHasReviewed && !InitialAdd)
+                        {
+                            <CardTitle>Review wijzigen</CardTitle>
+                        }
+                        else
+                        {
+                            <CardTitle>Review toevoegen</CardTitle>
+                        }
+                    </CardHeader>
+                    <Veg.Client.Components.AddReview ProductIsSet="true" ProductReviewing="@CurrentProduct" ReloadRefresh="@ReloadReviews" />
+                </Card>
+            </Column>
+        </Row>
+        <Row Gutter=@((0, 16))>
+            <Column ColumnSize="ColumnSize.Is12">
+                <Jumbotron>
+                    <Veg.Client.Components.ShowReviews ReviewsFor="@CurrentProduct" @ref="ReviewsComponent" />
+                </Jumbotron>
+            </Column>
+        </Row>
+    }
+    else
+    {
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Laden...</span>
+        </div>
+    }
+</Container>

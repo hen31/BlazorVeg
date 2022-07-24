@@ -1,0 +1,63 @@
+﻿@page "/Register"
+@layout Shared.LoginLayout
+@inherits RegisterBase
+
+
+<h1 class="h3 mb-3 font-weight-normal">Registeren</h1>
+@if (IsRegistering)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Bezig met registeren...</span>
+    </div>
+}
+else if ((RegisterResult != null && RegisterResult.IsError) || !string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <div class="alert alert-warning text-left" role="alert">
+        @if (RegisterResult?.ErrorType == Veg.App.Pages.RegisterErrorType.ModelError)
+        {
+            <ul>
+                @foreach (var error in RegisterResult.Errors)
+        {
+                    <li>@error.Description</li>
+        }
+            </ul>
+        }
+        else if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <ul>
+                <li>@ErrorMessage</li>
+            </ul>
+        }
+        else
+        {
+            @("Kan geen verbinding maken met server");
+        }
+    </div>
+}
+else if (RegisterResult != null)
+{
+    @(Newtonsoft.Json.JsonConvert.SerializeObject(RegisterResult))
+}
+<form @onsubmit="RegisterExecuteAsync" >
+    <label for="inputEmail" class="sr-only">Emailadres</label>
+    <input type="email" id="inputEmail" class="form-control" placeholder="Emailadres" required="" autofocus="" @bind="Email" disabled=@IsRegistering />
+    <label for="inputPassword" class="sr-only">Wachtwoord</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Wachtwoord" required="" @bind="Password" disabled=@IsRegistering />
+    <label for="inputPassword2" class="sr-only">Bevestig wachtwoord</label>
+    <input type="password" id="inputPassword2" class="form-control" placeholder="Bevestig wachtwoord" required="" @bind="Password2" disabled=@IsRegistering />
+
+    <div class="d-flex justify-content-between m-2">
+        <div class="text-left">
+            <NavLink href="login">
+                Inloggen
+            </NavLink>
+        </div>
+        <div class="text-right">
+            <NavLink href="confirm">
+                emailcode invullen
+            </NavLink>
+        </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Registeren</button>
+</form>

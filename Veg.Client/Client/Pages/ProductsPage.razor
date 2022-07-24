@@ -1,0 +1,341 @@
+﻿@inherits ProductsPageBase
+@page "/Products"
+@page "/"
+
+@page "/Products/{ProductSearchText}/{SelectedCategoryId}/{VeganOrVega:bool}/{CurrentPage:int}"
+@page "/Products/{SelectedCategoryId}/{VeganOrVega:bool}/{CurrentPage:int}"
+@page "/Products/{ProductSearchText}/{SelectedCategoryId}/{VeganOrVega:bool}/{CurrentPage:int}/{LimitResultOptionsJson}"
+@page "/Products/{SelectedCategoryId}/{VeganOrVega:bool}/{CurrentPage:int}/{LimitResultOptionsJson}"
+
+@page "/Products/{ProductSearchText}/{SelectedCategoryId}/{VeganOrVega:bool}"
+@page "/Products/{SelectedCategoryId}/{VeganOrVega:bool}"
+@page "/Products/{ProductSearchText}/{SelectedCategoryId}/{VeganOrVega:bool}/{LimitResultOptionsJson}"
+@page "/Products/{SelectedCategoryId}/{VeganOrVega:bool}/{LimitResultOptionsJson}"
+<Container>
+    <Row Gutter="(0,16)">
+        <Blazorise.Column ColumnSize="ColumnSize.Is12">
+            <Jumbotron>
+
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is12">
+                        <Button Color="Color.Primary" Style="width:100%" Type="ButtonType.Button" @onclick="GotoSearchWithBarcode"> <Blazorise.Icons.Material.Icon Name="Blazorise.Icons.Material.MaterialIcons.Camera" Margin="Margin.Is2"></Blazorise.Icons.Material.Icon>Zoeken op barcode</Button>
+                    </Column>
+                </Row>
+                <Form @onsubmit="(async () => await SearchClicked())">
+                    <Row>
+                        <Column ColumnSize="ColumnSize.Is5.OnMobile.Is12">
+                            <FieldLabel>Categorie</FieldLabel>
+                            <Autocomplete TItem="Veg.Entities.ProductCategory"
+                                          SelectedValue="@SelectedCategory"
+                                          SelectedValueChanged="SelectedCategoryChanged"
+                                          Data="@CategoriesSelect"
+                                          ValueField="((b) => b)"
+                                          TextField="((b) => b.FullCategoryPath)"
+                                          Filter="AutocompleteFilter.Contains" Placeholder="Alle categorieën" />
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is5.OnMobile.Is12">
+                            <FieldLabel>Zoeken</FieldLabel>
+                            <TextEdit @bind-Text="@ProductSearchText" Placeholder="Zoeken..." />
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is9.OnTablet.Is6.OnMobile">
+                            <FieldLabel>Vegan of vega</FieldLabel>
+                            <SelectList TItem="string" TValue="string" Data="@(new string[] { "Vega of vegan", "Alleen vegan" })"
+                                        SelectedValue="@VeganOrVegaSelected"
+                                        SelectedValueChanged="@VeganOrVegaSelectedChanged"
+                                        ValueField="((b) => b)"
+                                        TextField="((b) => b)" />
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is3.OnTablet.Is6.OnMobile">
+                            <Button Color="Color.Primary" Style="vertical-align: middle;top: 50%;" Type="ButtonType.Submit">Zoeken</Button>
+                        </Column>
+                    </Row>
+                </Form>
+            </Jumbotron>
+        </Blazorise.Column>
+    </Row>
+    @if (CurrentSearchResults != null && CurrentSearchResults.TotalItems > 0)
+    {
+        <Veg.Client.Components.ShowProductsFilter CurrentSearchResults="@CurrentSearchResults"
+                                                  LimitResultOptions="@LimitResultOptions"
+                                                  @bind-CurrentPage="@CurrentPage"
+                                                  NavigateToUpdatedLink="@UpdateUrlAction"
+                                                  SearchAgainLink="@SearchAgainLink" />
+    }
+    <div id="searchResult">
+        @if (CurrentSearchResults != null)
+        {
+            @if (!Searching)
+            {
+
+
+                @if (CurrentSearchResults.TotalItems == 0)
+                {
+                    <Alert Color="Blazorise.Color.Danger" Visible="true">
+                        <AlertMessage>
+                            Helaas is er geen product niet gevonden.
+                            <br />
+                            <Button Color="Color.Primary" @onclick="@(()=> NavigationManager.NavigateTo($"/addproduct"))">Wilt u hem toevoegen?</Button>
+                        </AlertMessage>
+                    </Alert>
+                }
+                else if (CurrentSearchResults.TotalItems > 0)
+                {
+                    <Pagination Alignment=" Alignment.Center">
+
+                        @if (CurrentPage == 0)
+                        {
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(0)">
+                                    <u>1</u>
+                                </PaginationLink>
+                            </PaginationItem>
+                            @if (((CurrentSearchResults.CurrentPage + 1) * (CurrentSearchResults.PageSize)) <= CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage(1)">
+                                        2
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+                            @if (((CurrentSearchResults.CurrentPage + 2) * (CurrentSearchResults.PageSize)) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage(2)">
+                                        3
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+
+                            @if (((CurrentSearchResults.CurrentPage + 1) * CurrentSearchResults.PageSize) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage((CurrentSearchResults.TotalItems % CurrentSearchResults.PageSize) == 0 ? (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize) - 1 : (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize))">
+                                        <span aria-hidden="true">»</span>
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+                        }
+                        else
+                        {
+
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(0)">
+                                    <span aria-hidden="true">«</span>
+                                </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(CurrentSearchResults.CurrentPage - 1)">
+                                    @CurrentSearchResults.CurrentPage
+                                </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(CurrentSearchResults.CurrentPage)">
+                                    <u>@(CurrentSearchResults.CurrentPage + 1)</u>
+                                </PaginationLink>
+                            </PaginationItem>
+                            @if (((CurrentSearchResults.CurrentPage + 1) * CurrentSearchResults.PageSize) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage(CurrentSearchResults.CurrentPage + 1)">
+                                        @(CurrentSearchResults.CurrentPage + 2)
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+
+                            @if (((CurrentSearchResults.CurrentPage + 1) * CurrentSearchResults.PageSize) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage((CurrentSearchResults.TotalItems % CurrentSearchResults.PageSize) == 0 ? (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize) - 1 : (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize))">
+                                        <span aria-hidden="true">»</span>
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+                        }
+
+                    </Pagination>
+
+
+                    <Jumbotron Margin="Margin.Is2">
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is12">
+                                <Field>
+                                    <FieldLabel>Sorteren op</FieldLabel>
+                                    <Select SelectedValue="@SelectedSorting" SelectedValueChanged="@(async (string value) => await SelectedValueSortingChanged(value))" TValue="string" Placeholder="Sorteren op">
+                                        <SelectItem Value="@("default")">Naam</SelectItem>
+                                        <SelectItem Value="@("HighLow")">Hoog-laag (beoordeling)</SelectItem>
+                                        <SelectItem Value="@("LowHigh")">Laag-hoog (beoordeling)</SelectItem>
+                                    </Select>
+                                </Field>
+                            </Column>
+                        </Row>
+
+
+                        @foreach (Veg.Entities.Product product in CurrentSearchResults.Products)
+                        {
+
+                            <a href="@("Product/" + product.ID.ToString("D"))" class="card flex-row flex-wrap">
+
+                                <div class="card-header border-0">
+                                    <img src="@ImageService.GetImagePath("128", product.ProductImage)" class="img-fluid" alt="@product.Name" />
+                                </div>
+                                <div class="card-block px-2 p-3">
+                                    <h4 class="card-title">@(product.Brand.Name + " - " + product.Name)</h4>
+                                    <p class="card-text">@product.Rating.ToString("0.0")/5</p>
+                                    <p class="card-text">@(product.IsVegan ? "Vegan" : "Vegetarisch")</p>
+                                </div>
+                            </a>
+                            <br>
+                        }
+                        <!--</div>-->
+                    </Jumbotron>
+
+                    <Pagination Alignment="Alignment.Center">
+
+                        @if (CurrentPage == 0)
+                        {
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(0)">
+                                    <u>1</u>
+                                </PaginationLink>
+                            </PaginationItem>
+                            @if (((CurrentSearchResults.CurrentPage + 1) * (CurrentSearchResults.PageSize)) <= CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage(1)">
+                                        2
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+                            @if (((CurrentSearchResults.CurrentPage + 2) * (CurrentSearchResults.PageSize)) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage(2)">
+                                        3
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+
+                            @if (((CurrentSearchResults.CurrentPage + 1) * CurrentSearchResults.PageSize) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage((CurrentSearchResults.TotalItems % CurrentSearchResults.PageSize) == 0 ? (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize) - 1 : (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize))">
+                                        <span aria-hidden="true">»</span>
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+                        }
+                        else
+                        {
+
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(0)">
+                                    <span aria-hidden="true">«</span>
+                                </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(CurrentSearchResults.CurrentPage - 1)">
+                                    @CurrentSearchResults.CurrentPage
+                                </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationLink href="@GetUrlWithPage(CurrentSearchResults.CurrentPage)">
+                                    <u>@(CurrentSearchResults.CurrentPage + 1)</u>
+                                </PaginationLink>
+                            </PaginationItem>
+                            @if (((CurrentSearchResults.CurrentPage + 1) * CurrentSearchResults.PageSize) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage(CurrentSearchResults.CurrentPage + 1)">
+                                        @(CurrentSearchResults.CurrentPage + 2)
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+
+                            @if (((CurrentSearchResults.CurrentPage + 1) * CurrentSearchResults.PageSize) < CurrentSearchResults.TotalItems)
+                            {
+                                <PaginationItem>
+                                    <PaginationLink href="@GetUrlWithPage((CurrentSearchResults.TotalItems % CurrentSearchResults.PageSize) == 0 ? (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize) - 1 : (CurrentSearchResults.TotalItems / CurrentSearchResults.PageSize))">
+                                        <span aria-hidden="true">»</span>
+                                    </PaginationLink>
+                                </PaginationItem>
+                            }
+
+                        }
+
+                    </Pagination>
+                }
+            }
+            else
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Laden...</span>
+                </div>
+            }
+        }
+        else if (NavigationManager.ToBaseRelativePath(NavigationManager.Uri.ToString()).ToString() == "")
+        {
+            <Row Gutter="(0,16)">
+                <Blazorise.Column ColumnSize="ColumnSize.Is12">
+                    <Jumbotron>
+                        <JumbotronSubtitle>Welkom op todo.com!</JumbotronSubtitle>
+                        <p>
+                            Je kunt hier allerlei vegetarische en veganistische producten vinden.
+                            Het lijkt ons leuk als je ook reviews bij producten achterlaat.
+                            Mis je nog iets? Dan kun je zelf ook producten toevoegen.
+                        </p>
+                        <p>
+                            Loop je ergens tegenaan? Stuur dan een mailtje naar info@todo.com, dan kijken we of we het op kunnen lossen.
+                        </p>
+                    </Jumbotron>
+                </Blazorise.Column>
+            </Row>
+            <!--
+                                Hoi, welkom op todo.com!
+
+                                -->
+            <Row Gutter="(0,16)">
+                <Blazorise.Column ColumnSize="ColumnSize.Is12">
+                    <Jumbotron>
+                        <JumbotronSubtitle>Nieuw toegevoegd</JumbotronSubtitle>
+                        <Veg.Client.Components.LatestReviews />
+                    </Jumbotron>
+                </Blazorise.Column>
+            </Row>
+            if (CategoriesSelect != null)
+            {
+
+                <Row Gutter="(0,16)">
+                    <Blazorise.Column ColumnSize="ColumnSize.Is12">
+
+                        <Jumbotron>
+                            <JumbotronSubtitle>categorieën</JumbotronSubtitle>
+                            <CardDeck>
+                                @foreach (Veg.Entities.ProductCategory category in CategoriesSelect.Where(b => b.ParentCategory == null && b.ID != Guid.Empty))
+                                {
+                                    <Card>
+                                        <a @onclick="@(async ()=> { SelectedCategoryId = category.ID.ToString("D"); SelectedCategory = category; await SearchClicked();  })" href="@GetNavigationLink(category, false)">
+
+                                            <CardBody>
+                                                <CardTitle Size="5">@category.Name</CardTitle>
+                                            </CardBody>
+                                        </a>
+
+                                    </Card>
+                                }
+                            </CardDeck>
+
+                        </Jumbotron>
+                    </Blazorise.Column>
+                </Row>
+            }
+        }
+    </div>
+
+</Container>

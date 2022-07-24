@@ -1,0 +1,45 @@
+﻿@inherits ComponentBase
+<CardDeck>
+    @if (ImageService != null)
+    {
+    @foreach (var latestProductAdded in LatestAddedProducts)
+        {
+    <Card>
+        <a href="@("Product/" + latestProductAdded.ID.ToString("D"))">
+
+            <CardImage Style="width:100%" Source="@ImageService.GetImagePath("256", latestProductAdded.ProductImage)" Class="img-thumbnail" Alt="Placeholder image">
+            </CardImage>
+            <CardBody>
+                <CardTitle Size="5"> @(latestProductAdded.Brand.Name + " - " + latestProductAdded.Name)</CardTitle>
+            </CardBody>
+        </a>
+
+    </Card>
+        }
+    }
+</CardDeck>
+
+
+@code
+{
+
+    [Inject]
+    public VegImageService ImageService { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    public Veg.API.Client.ProductsClient ProductsClient { get; set; }
+
+    public ICollection<Veg.Entities.Product> LatestAddedProducts { get; set; } = new List<Veg.Entities.Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        LatestAddedProducts = await ProductsClient.GetLatestAddedProducts(4);
+
+    }
+
+
+}

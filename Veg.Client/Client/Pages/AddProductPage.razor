@@ -1,0 +1,13 @@
+﻿@page "/AddProduct"
+@page "/AddProduct/{Barcode}"
+
+    <Container>
+        <Jumbotron>
+            <Veg.Client.Components.AddProduct Barcode="@Barcode" />
+        </Jumbotron>
+    </Container>
+    @code
+{
+        [Parameter]
+        public string Barcode { get; set; }
+    }

@@ -1,0 +1,56 @@
+﻿@page "/Login"
+@page "/Login/{ReturnUrl}"
+@layout Shared.LoginLayout
+@inherits LoginBasePage
+
+
+            <h1 class="h3 mb-3 font-weight-normal">Inloggen</h1>
+            @if (IsLoggingIn)
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Bezig met inloggen...</span>
+                </div>
+            }
+            else if (LoginResult != null)
+            {
+                if (LoginResult.IsError)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @if (LoginResult.ErrorType == Veg.App.Pages.LoginErrorType.WrongCredentials)
+                        {
+                            @("Geen gebruiker bekend met deze inlog gegevens");
+                        }
+                        else
+                        {
+                            @("Kan geen verbinding maken met authenticatieserver");
+                        }
+                    </div>
+                }
+            }
+<form @onsubmit="LoginExecuteAsync" >
+    <label for="inputEmail" class="sr-only">Emailadres</label>
+    <input type="email" id="inputEmail" class="form-control" placeholder="Emailadres" required="" autofocus="" @bind="Email" disabled=@IsLoggingIn />
+    <label for="inputPassword" class="sr-only">Wachtwoord</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Wachtwoord" required="" @bind="Password" disabled=@IsLoggingIn />
+
+    <div class="d-flex justify-content-between">
+        <div>
+            <NavLink href="@("ResetPassword/" + Email)">
+                Wachtwoord vergeten
+            </NavLink>
+        </div>
+
+        <div>
+            <NavLink href="register">
+                Registeren
+            </NavLink>
+        </div>
+    </div>
+    <!--   <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> Remember me
+        </label>
+    </div>-->
+    <button class="btn btn-lg btn-raised btn-primary btn-block" type="submit">Inloggen</button>
+</form>
+

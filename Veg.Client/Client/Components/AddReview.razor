@@ -1,0 +1,107 @@
+﻿@inherits AddReviewBase
+@inject NavigationManager navigationManager
+
+@if (CurrentUser == null)
+{
+    <Button Color="Color.Primary" @onclick="@(()=> navigationManager.NavigateTo($"Login/{System.Web.HttpUtility.UrlEncode(navigationManager.Uri.ToString().Replace(navigationManager.BaseUri.ToString(), ""))}"))">Inloggen om review te plaatsen</Button>
+}
+else if (!IsAddingReview)
+{
+<Form>
+
+    <Alert Color="Color.Success" Visible="@Added">
+        @if (AlreadyHasReview)
+        {
+            <AlertMessage>Review is gewijzigd</AlertMessage>
+        }
+        else
+        {
+            <AlertMessage>Review is toegevoegd</AlertMessage>
+        }
+    </Alert>
+
+   
+    <Alert Color="Color.Danger" Visible="@HasError">
+        <AlertMessage>Review toevoegen is mislukt</AlertMessage>
+    </Alert>
+
+    @if (!ProductIsSet)
+    {
+        <Field>
+            <FieldLabel>Productnaam</FieldLabel>
+
+        </Field>
+
+        @if (IsNewProduct)
+        {
+            <Field>
+                <FieldLabel>Merk</FieldLabel>
+                <SelectList TItem="Veg.Entities.Brand" TValue="Veg.Entities.Brand"></SelectList>
+            </Field>
+        }
+    }
+
+    <Field>
+        <FieldLabel>Beoordeling</FieldLabel>
+        <div class="noselect">
+            <Icon Name="@Star1" @onclick="Star1Clicked" Class="d-inline-block" />
+            <Icon Name="@Star2" @onclick="Star2Clicked" Class="d-inline-block" />
+            <Icon Name="@Star3" @onclick="Star3Clicked" Class="d-inline-block" />
+            <Icon Name="@Star4" @onclick="Star4Clicked" Class="d-inline-block" />
+            <Icon Name="@Star5" @onclick="Star5Clicked" Class="d-inline-block" />
+        </div>
+    </Field>
+
+    <Field>
+        <FieldLabel>Beschrijving</FieldLabel>
+        <MemoEdit Rows="8" Placeholder="Beschrijf ervaring" @bind-Text="ContentOfReview" />
+    </Field>
+
+    <Divider Type="DividerType.TextContent" Text="Afbeeldingen bij review" />
+
+    @if (Images.Count != 0)
+    {
+        <CardDeck>
+
+            @foreach (var image in Images)
+            {
+                <Card>
+                    <div style="        height: 256px;
+        width: 256px;
+        overflow: hidden;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+">
+                        <Figure>
+                            <FigureImage Source="@(string.Concat("data:image/png;base64, ", image.Data))" />
+                        </Figure>
+                    </div>
+                    <CardBody>
+                        <Button Color="Color.Danger" @onclick="@(() => Images.Remove(image))">Verwijderen</Button>
+                    </CardBody>
+                </Card>
+
+            }
+        </CardDeck>
+    }
+
+
+    <Field>
+        <FieldLabel>Afbeelding toevoegen</FieldLabel>
+        <FileEdit Filter="image/jpeg, image/png" Multiple="true" Changed="@OnImageChanged" />
+    </Field>
+
+    <Button Type="ButtonType.Button" @onclick="(async () => await AddReviewClicked())" PreventDefaultOnSubmit="true" Class="pull-right">@(AlreadyHasReview ? "Review wijzigen" : "Review toevoegen")</Button>
+</Form>
+}
+else
+{
+    <Row>
+        <Blazorise.Column ColumnSize="ColumnSize.Is6.WithOffset.OnMobile.Is6">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Laden...</span>
+            </div>
+        </Blazorise.Column>
+    </Row>
+}

@@ -1,0 +1,192 @@
+﻿<mah:MetroWindow x:Class="Veg.Admin.Client.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:controls="clr-namespace:Veg.Admin.Client.Controls"
+                 xmlns:mahIcon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 Title="Producten"
+                 Height="600"
+                 x:Name="mainView"
+                 Width="800">
+    <mah:MetroTabControl>
+        <mah:MetroTabItem Header="Producten">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Zoeken" Margin="2"/>
+                    <TextBox Text="{Binding SearchTerm}" mah:TextBoxHelper.Watermark="Zoeken..." Width="125" Margin="2"/>
+
+                    <ComboBox SelectedItem="{Binding ProductCategory}" 
+                              ItemsSource="{Binding ProductCategories}"
+                              DisplayMemberPath="FullCategoryPath" Width="150" Margin="2"/>
+
+                    <CheckBox IsChecked="{Binding OnlyWithoutImage}" Content="Alleen zonder afbeelding"/>
+                    <Button Content="Zoeken" Margin="2" Command="{Binding SearchCommand}" CommandParameter="ExecuteNewSearch"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="1" ItemsSource="{Binding CurrentSearchResults.Products}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Afbeelding">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <controls:HendrikImage ImageSize="128" ImageName="{Binding ProductImage}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Merk" Binding="{Binding Brand.Name}"/>
+                        <DataGridTextColumn Header="Naam" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Beoordeling" Binding="{Binding Rating}"/>
+                        <DataGridTextColumn Header="IsVegan" Binding="{Binding IsVegan}"/>
+                        <DataGridTemplateColumn Header="Verwijderen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.DeleteCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="BasketRemove"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Wijzigen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.EditCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="Pencil"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Afbeelding wijzigen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.EditImageCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="ImageEdit"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <Button Command="{Binding PreviousCommand}" HorizontalAlignment="Left" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PagePrevious"/>
+                </Button>
+                <Button Command="{Binding NextCommand}" HorizontalAlignment="Right" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PageNext"/>
+                </Button>
+
+            </Grid>
+        </mah:MetroTabItem>
+        <mah:MetroTabItem Header="Reports">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding OnlyNotHandled}" Content="Alleen niet afgehandeld"/>
+                    <Button Content="Zoeken" Margin="2" Command="{Binding SearchReportsCommand}" CommandParameter="ExecuteNewSearch"/>
+                </StackPanel>
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Reports}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Reden" Binding="{Binding Reason}"/>
+                        <DataGridTextColumn Header="Door" Binding="{Binding AddedByMember.UserName}"/>
+                        <DataGridTextColumn Header="Op" Binding="{Binding AddedAt}"/>
+                        <DataGridTextColumn Header="Afgehandeld" Binding="{Binding Handled}"/>
+                        <DataGridTemplateColumn Header="Verwijderen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.DeleteCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="BasketRemove"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Wijzigen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.EditCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="Pencil"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <Button Command="{Binding PreviousReportsCommand}" HorizontalAlignment="Left" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PagePrevious"/>
+                </Button>
+                <Button Command="{Binding NextReportsCommand}" HorizontalAlignment="Right" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PageNext"/>
+                </Button>
+
+            </Grid>
+        </mah:MetroTabItem>
+        <mah:MetroTabItem Header="Gebruikers" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Zoeken" Margin="2"/>
+                    <TextBox Text="{Binding SearchTermUser}" mah:TextBoxHelper.Watermark="Zoeken..." Width="125" Margin="2"/>
+                    <Button Content="Zoeken" Margin="2" Command="{Binding SearchUsersCommand}"  CommandParameter="ExecuteNewSearch"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="1" ItemsSource="{Binding CurrentSearchUserResults}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Gebruikersnaam" Binding="{Binding UserName}"/>
+                        <DataGridTextColumn Header="IsAdmin" Binding="{Binding IsAdmin}"/>
+                        <DataGridTextColumn Header="Gebruiker sinds" Binding="{Binding UserSince}"/>
+                        <DataGridTemplateColumn Header="Wijzigen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.EditCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="Pencil"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <Button Command="{Binding PreviousUsersCommand}" HorizontalAlignment="Left" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PagePrevious"/>
+                </Button>
+                <Button Command="{Binding NextUsersCommand}" HorizontalAlignment="Right" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PageNext"/>
+                </Button>
+
+            </Grid>
+        </mah:MetroTabItem>
+        <mah:MetroTabItem Header="Afbeeldingen controleren">
+            <Grid>
+             
+                
+                <controls:HendrikImage ImageSize="512" ImageName="{Binding ProductOfImage.ProductImage}"/>
+                <Border Background="White" BorderBrush="Green" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="3" BorderThickness="2">
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBlock FontSize="12" Text="{Binding ProductOfImage.Brand.Name}"/>
+                        <TextBlock FontSize="12" Text=" - "/>
+                        <TextBlock FontSize="12" Text="{Binding ProductOfImage.Name}"/>
+                    </StackPanel>
+                </Border>
+                <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Button Content="Goedkeuren" Margin="3" Command="{Binding VerifyCommand}"/>
+                    <Button Content="Wijzigen" Margin="3" Command="{Binding ChangeImageCommand}"/>
+                    <Button Content="Afwijzen" Margin="3" Command="{Binding EmptyImageCommand}"/>
+                </StackPanel>
+            </Grid>
+        </mah:MetroTabItem>
+    </mah:MetroTabControl>
+</mah:MetroWindow>

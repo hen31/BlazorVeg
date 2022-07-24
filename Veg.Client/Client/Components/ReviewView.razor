@@ -1,0 +1,162 @@
+﻿@inherits ComponentBase
+
+@if (ProductReview.Product == null || ProductReview.Product.Brand == null)
+{
+    <h6>@("Beoordeling van ") <NavLink href="@($"Profile/{ProductReview.MemberId.ToString("D")}")">@ProductReview.Member.UserName</NavLink> @( " - " + ProductReview.DateAdded.ToString("d"))</h6>
+    <Veg.Client.Components.ReportModal @ref="@ReportModal" ProductReview="@ProductReview" Reasons="@Reasons" />
+
+}
+else
+{
+    <Button @onclick="@(() => NavigationManager.NavigateTo($"Product/{ProductReview.Product.ID.ToString("D")}"))" Class="btn-outline-primary float-right">Naar product</Button>
+
+    <h6>@("Beoordeling van " + ProductReview.Product.Brand.Name + " "+  ProductReview.Product.Name)</h6>
+}
+<Divider Type="DividerType.Dashed" />
+<Row>
+    <Column ColumnSize="ColumnSize.Is9">
+
+        <Field>
+            <FieldLabel>Beoordeling</FieldLabel>
+            <div class="noselect">
+                <Icon Name="@("star")" Class="d-inline-block" />
+                <Icon Name="@(ProductReview.Rating >= 2 ? "star" : "star_outline")" Class="d-inline-block" />
+                <Icon Name="@(ProductReview.Rating >= 3 ? "star" : "star_outline")" Class="d-inline-block" />
+                <Icon Name="@(ProductReview.Rating >= 4 ? "star" : "star_outline")" Class="d-inline-block" />
+                <Icon Name="@(ProductReview.Rating >= 5 ? "star" : "star_outline")" Class="d-inline-block" />
+            </div>
+
+        </Field>
+    </Column>
+    <Column ColumnSize="ColumnSize.Is3">
+        @if (ProductReview != null)
+        {
+            <Tooltip Class="float-right" Text="Probleem met review rapporteren">
+                <Button @onclick="(() => ReportItem())" Class="btn-outline-primary "><Blazorise.Icons.Material.Icon Name="Blazorise.Icons.Material.MaterialIcons.Flag"></Blazorise.Icons.Material.Icon></Button>
+            </Tooltip>
+        }
+    </Column>
+</Row>
+@if (ProductReview.Content != null)
+{
+    <Row>
+
+        <Column ColumnSize="ColumnSize.Is12">
+            @if (ProductReview.Content?.Length <= 240 || ExpandFullContent)
+            {
+                <Text>@ProductReview.Content</Text>
+            }
+            else
+            {
+                <Text>@(ProductReview.Content.Substring(0, 240) + "...")</Text>
+                <a href="" @onclick="@(() => ExpandFullContent = true)" @onclick:preventDefault>Lees meer</a>
+            }
+        </Column>
+    </Row>
+}
+@if (ProductReview.ReviewImages.Count != 0)
+{
+    <Divider Type="DividerType.TextContent" Text="Afbeeldingen" />
+
+
+    <Carousel @bind-SelectedSlide="@SelectedSlide" ShowControls="@(ProductReview.ReviewImages.Count != 1)">
+        @foreach (var image in ProductReview.ReviewImages)
+        {
+            <CarouselSlide Name="@image.ImageName">
+                <Image Source="@(VegImageService.GetImagePath("256", image.ImageName))" Style="margin:auto" @onclick="@(()=>OpenBigImage(image.ImageName))" />
+
+            </CarouselSlide>
+        }
+    </Carousel>
+
+    <Modal @ref="ImageModel">
+        <ModalBackdrop />
+        <ModalContent>
+            <ModalHeader>
+                <CloseButton Clicked="@HideModal" />
+            </ModalHeader>
+            <ModalBody>
+                <div style="overflow-x: scroll;">
+                    <img src="@VegImageService.GetImagePath("512", CurrentImage)" />
+                </div>
+            </ModalBody>
+        </ModalContent>
+    </Modal>
+
+}
+
+
+
+@code
+{
+    [Parameter]
+    public Veg.Entities.ProductReview ProductReview { get; set; }
+
+    [Inject]
+    public VegImageService VegImageService { get; set; }
+
+    public Modal ImageModel { get; set; }
+
+    public string CurrentImage { get; set; }
+
+    public void HideModal()
+    {
+        ImageModel.Hide();
+    }
+    public void OpenBigImage(string fileName)
+    {
+        CurrentImage = fileName;
+        ImageModel.Show();
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        if (ProductReview != null && ProductReview.ReviewImages?.Count != 0)
+        {
+            SelectedSlide = ProductReview.ReviewImages.First().ImageName;
+        }
+    }
+
+    public bool ExpandFullContent { get; set; }
+
+    public string SelectedSlide { get; set; }
+    public ReportModal ReportModal { get; set; }
+    [Inject]
+    public Veg.App.Pages.ILoginRepository LoginRepository { get; set; }
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+    public Veg.App.Pages.User CurrentUser { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        CurrentUser = await LoginRepository.GetCurrentUser();
+
+    }
+
+    public void GoToLogin()
+    {
+        NavigationManager.NavigateTo($"Login/{System.Web.HttpUtility.UrlEncode(NavigationManager.Uri.ToString().Replace(NavigationManager.BaseUri.ToString(), ""))}");
+    }
+
+    public void ReportItem()
+    {
+        if (CurrentUser != null)
+        {
+            ReportModal.ShowModal();
+        }
+        else
+        {
+            GoToLogin();
+        }
+    }
+
+    public string[] Reasons { get; set; } = new string[] {
+        "Taalgebruik",
+        "Neppe review",
+        "Heeft product niet gebruikt",
+        "Verkeerde foto's",
+        "Anders"
+        };
+}

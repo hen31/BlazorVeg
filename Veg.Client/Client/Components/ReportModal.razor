@@ -1,0 +1,30 @@
+﻿@inherits ReportModalBase
+
+<Modal @ref="ModalRef">
+    <ModalBackdrop />
+    <ModalContent IsCentered="true">
+        <ModalHeader>
+            <ModalTitle>Rapporteren</ModalTitle>
+            <CloseButton Clicked="@CloseModal" />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>Reden</FieldLabel>
+                <RadioGroup TValue="string" Name="reason" @bind-CheckedValue="@SelectedReason">
+                    @foreach (string reason in Reasons)
+                    {
+                        <Radio TValue="string" Value="@reason">@reason</Radio>
+                    }
+                </RadioGroup>
+            </Field>
+            <Field>
+                <FieldLabel>Extra informatie</FieldLabel>
+                <MemoEdit @bind-Text="@ExtraInformation" Rows="5" Placeholder="Extra informatie"/>
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@CloseModal">Annuleren</Button>
+            <Button Color="Color.Primary" Clicked="@(async () => await SaveReportItem())">Rapporteren</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>

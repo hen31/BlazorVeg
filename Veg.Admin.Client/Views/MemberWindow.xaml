@@ -1,0 +1,131 @@
+﻿<mah:MetroWindow x:Class="Veg.Admin.Client.MemberWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:mahIcon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:controls="clr-namespace:Veg.Admin.Client.Controls" 
+                 Title="{Binding Title}"
+                 SizeToContent="Height"
+                 WindowStartupLocation="CenterOwner"
+                 x:Name="mainView"
+                 Width="800">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" Content="Username" Margin="2"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Member.UserName}" Margin="2"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Uitgeschakeld" Margin="2" VerticalAlignment="Top"/>
+        <CheckBox Grid.Row="1" Grid.Column="1"  IsChecked="{Binding Member.Disabled}"  Margin="2"/>
+        
+        <Label Grid.Row="2" Grid.Column="0" Content="Administrator" Margin="2" VerticalAlignment="Top"/>
+        <CheckBox Grid.Row="2" Grid.Column="1"  IsChecked="{Binding Member.IsAdmin}"  Margin="2"/>
+        <!-- reviews -->
+        <GroupBox Header="Reviews"  Grid.Row="3" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Reviews}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Merk" Binding="{Binding Product.Brand.Name}"/>
+                        <DataGridTextColumn Header="Product" Binding="{Binding Product.Name}"/>
+                        <DataGridTextColumn Header="Beoordeling" Binding="{Binding Rating}"/>
+                        <DataGridTextColumn Header="Toegevoegd op" Binding="{Binding DateAdded}"/>
+                        <DataGridTextColumn Header="Mutatie op" Binding="{Binding DateOfMutation}"/>
+                        <DataGridTemplateColumn Header="Verwijderen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.DeleteCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="BasketRemove"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Wijzigen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.EditCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="Pencil"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <Button Command="{Binding PreviousReviewsCommand}" HorizontalAlignment="Left" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PagePrevious"/>
+                </Button>
+                <Button Command="{Binding NextReviewsCommand}" HorizontalAlignment="Right" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PageNext"/>
+                </Button>
+
+            </Grid>
+        </GroupBox>
+
+        <!-- producten -->
+        <GroupBox Header="Producten"  Grid.Row="4" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Products}" AutoGenerateColumns="False"
+                          CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Merk" Binding="{Binding Brand.Name}"/>
+                        <DataGridTextColumn Header="Product" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Beoordeling" Binding="{Binding Rating}"/>
+                        <DataGridTemplateColumn Header="Verwijderen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.DeleteCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="BasketRemove"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Wijzigen">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding DataContext.EditCommand, ElementName=mainView}" CommandParameter="{Binding}">
+                                        <mahIcon:PackIconMaterial Kind="Pencil"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <Button Command="{Binding PreviousProductsCommand}" HorizontalAlignment="Left" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PagePrevious"/>
+                </Button>
+                <Button Command="{Binding NextProductsCommand}" HorizontalAlignment="Right" Margin="3" Grid.Row="2">
+                    <mahIcon:PackIconMaterial Kind="PageNext"/>
+                </Button>
+
+            </Grid>
+        </GroupBox>
+        <Button HorizontalAlignment="Right" Grid.Row="10" Grid.ColumnSpan="2" Margin="3" Command="{Binding SaveCommand}">Opslaan</Button>
+    </Grid>
+</mah:MetroWindow>

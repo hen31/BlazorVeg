@@ -1,0 +1,60 @@
+﻿<mah:MetroWindow x:Class="Veg.Admin.Client.ProductReviewWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:mahIcon="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:controls="clr-namespace:Veg.Admin.Client.Controls" 
+                 Title="{Binding Title}"
+                 SizeToContent="Height"
+                 WindowStartupLocation="CenterOwner"
+                 x:Name="mainView"
+                 Width="800">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="125"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="125"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Naam" Margin="2" VerticalAlignment="Top"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductReview.Content}" AcceptsReturn="True" Margin="2"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Beoordeling" Margin="2" VerticalAlignment="Top"/>
+        <mah:NumericUpDown Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="5" Value="{Binding ProductReview.Rating}"  Margin="2"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Content="Aangemaakt door" Margin="2"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="{Binding ProductReview.Member.UserName}" Command="{Binding GoToUserCommand}" Margin="2"/>
+        
+        <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" Content="Afbeeldingen" Margin="2"/>
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding DeleteImageCommand}" Margin="2">
+                    <mahIcon:PackIconMaterial Kind="Delete"/>
+                </Button>
+            </StackPanel>
+            <ListBox Grid.Row="1" ItemsSource="{Binding ReviewImages}" Width="250" HorizontalAlignment="Left" 
+                     BorderThickness="1" 
+                     BorderBrush="Green" 
+                     SelectedItem="{Binding SelectedImage}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <controls:HendrikImage ImageSize="256" ImageName="{Binding ImageName}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        
+        <Button HorizontalAlignment="Right" Grid.Row="10" Grid.ColumnSpan="2" Margin="3" Command="{Binding SaveCommand}">Opslaan</Button>
+    </Grid>
+</mah:MetroWindow>

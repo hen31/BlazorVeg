@@ -1,0 +1,13 @@
+﻿@page "/Logout"
+@layout Shared.LoginLayout
+@inject Veg.App.Pages.ILoginRepository loginRepository
+@inject NavigationManager uriHelper
+@code
+{
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await loginRepository.Logout();
+        uriHelper.NavigateTo("login");
+    }
+}

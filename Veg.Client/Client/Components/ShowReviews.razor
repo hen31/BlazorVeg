@@ -1,0 +1,58 @@
+﻿@inherits ShowReviewsBase
+
+@if (LoadingReviews && (ReviewsSearchResults == null))
+{
+    <Row>
+
+        <Blazorise.Column ColumnSize="ColumnSize.Is6.WithOffset.OnMobile.Is6">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Laden...</span>
+            </div>
+        </Blazorise.Column>
+    </Row>
+}
+else
+{
+    <Row>
+        <Column ColumnSize="ColumnSize.Is12">
+            <Field>
+                <FieldLabel>Sorteren op</FieldLabel>
+                <Select SelectedValue="@SelectedSorting" SelectedValueChanged="@(async ( int value )=> await SelectedValueSortingChanged(value))" TValue="int" Placeholder="Sorteren op">
+                    <SelectItem Value="0">Datum</SelectItem>
+                    <SelectItem Value="1">Hoog-laag (beoordeling)</SelectItem>
+                    <SelectItem Value="2">Laag-hoog (beoordeling)</SelectItem>
+                </Select>
+            </Field>
+        </Column>
+    </Row>
+    foreach (var review in Reviews)
+    {
+        <Row Gutter="(0,16)">
+            <Column ColumnSize="ColumnSize.Is12">
+                @if ((Reviews.IndexOf(review) % 2) == 0)
+                {
+                    <div class="bg-light p-2">
+                        <ReviewView ProductReview="@review" />
+                    </div>
+                }
+                else
+                {
+                    <div class="bg-info p-2">
+                        <ReviewView ProductReview="@review" />
+                    </div>
+                }
+            </Column>
+        </Row>
+    }
+    if (Reviews.Count < ReviewsSearchResults.TotalCount)
+    {
+        <Row>
+            <Column ColumnSize="ColumnSize.Is12">
+                <Button Type="ButtonType.Button" @onclick="(async () => await LoadNextReviews())" PreventDefaultOnSubmit="true" Class="pull-right">Meer reviews laden</Button>
+            </Column>
+        </Row>
+    }
+}
+@code{
+
+}

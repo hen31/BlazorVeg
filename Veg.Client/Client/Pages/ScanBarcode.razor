@@ -1,0 +1,26 @@
+﻿@inherits ScanBarcodeBase
+@page "/scanbarcode/{ReturnUrl}"
+
+
+<div id="MediaStreamVideo">
+    <video autoplay="true" preload="auto" class="fillWidth">
+    </video>
+</div>
+
+@code{
+    [Parameter]
+    public string ReturnUrl { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [JSInvokableAttribute("RecognizedBarcode")]
+    public void RecognizedBarcode(string value)
+    {
+        System.Diagnostics.Debug.WriteLine("ValueFromJKs: " + value);
+        System.Diagnostics.Debug.WriteLine("navigateTo: " + ReturnUrl);
+        NavigationManager.NavigateTo(ReturnUrl + "/" + value);
+    }
+
+}
+
